@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Loader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/index.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='scripts/loading.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/formAction.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/alertMessage.js')}}"></script>
+</head>
+<body>
+    <div class="login-container">
+        {% if transferData %}
+        <div class="text-container">
+            <h2> Transfer Completed </h2>
+            <ul>
+                <li> Organization (Account) </li>
+                <li> Household (Account) </li>
+                <li> Contact </li>
+            </ul>
+            <a href="/generate-report" download>
+                <button class="app-button">Descargar Informes</button>
+            </a>
+        </div>       
+        {% elif transferPage and loggedSalesforce %}
+        <h1 style="text-align: center">Load CSV App</h1>
+        <div class = 'test'>
+            <div class="jumbotron">
+                <div>
+                    <p class="lead centered-text">Upload files or folders</p>
+                    <form id="upload-form" method="POST" enctype="multipart/form-data">
+                        <label for="upload-type">Select upload type:</label>
+                        <select id="upload-type" name="upload-type" onchange="toggleInputs()">
+                            <option value="file">File</option>
+                            <option value="folder">Folder</option>
+                        </select>
+                        <input type="file" id="folder" name="filename" accept=".csv" multiple webkitdirectory style="display: none;">
+                        <input type="file" id="files" name="filename" accept=".csv" multiple style="display: block;">
+                        <input type="submit" name="action" value="Upload" onclick="setAction('upload')">
+                        <input type="submit" name="action" value="Delete Files" onclick="setAction('delete')">
+                    </form>
+                </div>
+            </div>
+            <div class="login-button-container">
+                <button class="app-button connected" > Connected with Salesforce</button>
+            </div>
+        </div>
+        <button class="transfer-data-salesforce transfer-button" onClick = "startTransfer()">Transfer Data to Salesforce</button>
+        {% elif loggedSalesforce %}
+        <h1 style="text-align: center">Load CSV App</h1>
+        <div class = "test">
+            <div class="jumbotron">
+                <div>
+                    <p class="lead centered-text">Upload files or folders</p>
+                    <form id="upload-form" method="POST" enctype="multipart/form-data">
+                        <label for="upload-type">Select upload type:</label>
+                        <select id="upload-type" name="upload-type" onchange="toggleInputs()">
+                            <option value="file">File</option>
+                            <option value="folder">Folder</option>
+                        </select>
+                        <input type="file" id="folder" name="filename" accept=".csv" multiple webkitdirectory style="display: none;">
+                        <input type="file" id="files" name="filename" accept=".csv" multiple style="display: block;">
+                        <input type="submit" name="action" value="Upload" onclick="setAction('upload')">
+                        <input type="submit" name="action" value="Delete Files" onclick="setAction('delete')">
+                    </form>
+                </div>
+            </div>
+            <div class="login-button-container">
+                <button class="app-button connected" > Connected with Salesforce</button>
+            </div>
+        </div>
+        {% else %}
+        <h1 style="text-align: center">Load CSV App</h1>
+        <div class = "test">
+            <div class="jumbotron">
+                <div>
+                    <p class="lead centered-text">Upload files or folders</p>
+                    <form id="upload-form" method="POST" enctype="multipart/form-data">
+                        <label for="upload-type">Select upload type:</label>
+                        <select id="upload-type" name="upload-type" onchange="toggleInputs()">
+                            <option value="file">File</option>
+                            <option value="folder">Folder</option>
+                        </select>
+                        <input type="file" id="folder" name="filename" accept=".csv" multiple webkitdirectory style="display: none;">
+                        <input type="file" id="files" name="filename" accept=".csv" multiple style="display: block;">
+                        <input type="submit" name="action" value="Upload" onclick="setAction('upload')">
+                        <input type="submit" name="action" value="Delete Files" onclick="setAction('delete')">
+                    </form>
+                </div>
+            </div>            
+            <div class="login-button-container">
+                <button class="app-button" onclick="location.href='/auth/salesforce'"> Log in with Salesforce</button>
+            </div>
+        </div>        
+        {% endif %}
+
+    <div id="loading" style="display: none;">
+        <div class="spinner-container">
+            <i class="fas fa-spinner fa-spin"></i>
+            <h2>Transfiriendo datos a Salesforce...</h2>
+            <h2> esto puede tomar un tiempo ...</h2> 
+        </div>
+    </div>
+
+</body>
+</html>
