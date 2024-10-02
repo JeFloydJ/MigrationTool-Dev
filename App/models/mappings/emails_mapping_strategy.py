@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from models.mappings.mapping_strategy import MappingStrategy
 from typing import List, Dict
 
-class EmailContactsStrategy(MappingStrategy):
+class EmailStrategy(MappingStrategy):
     """
     A class used to represent an emails of contacts mapping strategy.
     """
@@ -21,7 +21,7 @@ class EmailContactsStrategy(MappingStrategy):
             None
         """
         super().__init__(input_csv)
-        self.contacts_emails_address_list: List[Dict] = []
+        self.object_emails_address_list: List[Dict] = []
 
     def make_mapping(self) -> List[Dict]:
         """
@@ -44,20 +44,24 @@ class EmailContactsStrategy(MappingStrategy):
                     'vnfp__Contact__r': {'Auctifera__Implementation_External_ID__c': lookup_id},
                     'vnfp__Implementation_External_ID__c' : str(str(counter)+ '-' + 'contacts-email' + '-' + row['QUERYRECID'])
                     }
-                    self.contacts_emails_address_list.append(contacts_emails_info)
+                    self.object_emails_address_list.append(contacts_emails_info)
 
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-        except KeyError as e:
-            print(f"Missing key in CSV file: {e}")
-        except IOError as e:
-            print(f"Error reading or writing file: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                for counter, row in enumerate(reader, start=1):
+                    lookup_id = row['Lookup ID']
+                    contacts_emails_info = {
+                    'vnfp__Type__c' : 'Email',
+                    'vnfp__value__c' : row['Email Addresses\\Email address'],
+                    'vnfp__Contact__r': {'Auctifera__Implementation_External_ID__c': lookup_id},
+                    'vnfp__Implementation_External_ID__c' : str(str(counter)+ '-' + 'contacts-email' + '-' + row['QUERYRECID'])
+                    }
+                    self.object_emails_address_list.append(contacts_emails_info)
         
-        return self.contacts_emails_address_list
+        return self.object_emails_address_list
         
-class EmailContactsUpdateStrategy(MappingStrategy):
+class EmailUpdateStrategy(MappingStrategy):
     """
     A class used to represent an update of emails of contacts mapping strategy.
     """
@@ -73,7 +77,7 @@ class EmailContactsUpdateStrategy(MappingStrategy):
             None
         """
         super().__init__(input_csv)
-        self.contacts_emails_update_address_list: List[Dict] = []
+        self.object_emails_update_address_list: List[Dict] = []
 
     def make_mapping(self) -> List[Dict]:
         """
@@ -95,15 +99,18 @@ class EmailContactsUpdateStrategy(MappingStrategy):
                         'Email' : row['Email Addresses\\Email address']
                     }
                     if valid:
-                        self.contacts_emails_update_address_list.append(new_info)      
+                        self.object_emails_update_address_list.append(new_info)      
 
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-        except KeyError as e:
-            print(f"Missing key in CSV file: {e}")
-        except IOError as e:
-            print(f"Error reading or writing file: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                for counter, row in enumerate(reader, start=1):
+                    valid = bool(row['Email Addresses\\Primary email address'])
+                    new_info = {
+                        'Auctifera__Implementation_External_ID__c': row['Lookup ID'], 
+                        'Email' : row['Email Addresses\\Email address']
+                    }
+                    if valid:
+                        self.object_emails_update_address_list.append(new_info)      
 
-        return self.contacts_emails_update_address_list
+        return self.object_emails_update_address_list

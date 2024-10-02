@@ -1,7 +1,6 @@
 import os 
 import sys
 from typing import List
-import logging
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from models.factories import mapping_strategy_factory
 from models.mappings import contacts_mapping_strategy
@@ -29,14 +28,6 @@ contacts_report_names = [
             "Veevart Contacts Report Email test",
             "Veevart Contacts Relationships report test"
 ]
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
-    force=True
-)
-logger = logging.getLogger(__name__)
 
 class AccountsAndContactsMigrationGroup(migrationGroup):
     """

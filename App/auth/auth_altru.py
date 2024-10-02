@@ -1,10 +1,6 @@
 # Import necessary modules
 import requests
-from dotenv import load_dotenv
 import os
-
-# Load environment variables
-load_dotenv()
 
 def auth_altru():
     # Get the environment variables

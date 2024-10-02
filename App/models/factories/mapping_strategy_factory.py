@@ -64,10 +64,10 @@ class MappingStrategyFactory:
         elif entity_type == object.SalesforceObject.Account and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart Organizations Relationships report test":
             self.organizationRelationMapping = relationships_mapping_strategy.OrganizationAffilationStrategy(input_csv).make_mapping()
         elif entity_type == object.SalesforceObject.Account and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart Organization Phones Report test":
-            self.organizationPhoneMapping = phone_mapping_strategy.OrganizationsPhoneStrategy(input_csv).make_mapping()
-            self.organizationUpdatePhoneMapping = phone_mapping_strategy.OrganizationsPhoneUpdateStrategy(input_csv).make_mapping()
+            self.organizationPhoneMapping = phone_mapping_strategy.PhoneStrategy(input_csv).make_mapping()
+            self.organizationUpdatePhoneMapping = phone_mapping_strategy.PhoneUpdateStrategy(input_csv).make_mapping()
         elif entity_type == object.SalesforceObject.Account and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart Organization Addresses Report test":
-            self.organizationAddressMapping = address_mapping_strategy.OrganizationsAddressStrategy(input_csv).make_mapping()
+            self.organizationAddressMapping = address_mapping_strategy.AddressStrategy(input_csv).make_mapping()
         elif entity_type == object.SalesforceObject.Account and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart HouseHolds Report test":
             self.HouseholdsMapping, self.households_external_list = households_mapping_strategy.HouseholdsMappingStrategy(input_csv).make_mapping()
 
@@ -75,11 +75,11 @@ class MappingStrategyFactory:
             self.ContactsMapping = contacts_mapping_strategy.ContactsMappingStrategy(input_csv).make_mapping(self.households_external_list)
 
         elif entity_type == object.SalesforceObject.Contact and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart Contacts Report Phones test":
-            self.ContactsPhoneMapping = phone_mapping_strategy.ContactsPhoneStrategy(input_csv).make_mapping()
-            self.ContactsPhoneUpdateMapping = phone_mapping_strategy.ContactsPhoneUpdateStrategy(input_csv).make_mapping()
+            self.ContactsPhoneMapping = phone_mapping_strategy.PhoneStrategy(input_csv).make_mapping()
+            self.ContactsPhoneUpdateMapping = phone_mapping_strategy.PhoneUpdateStrategy(input_csv).make_mapping()
         elif entity_type == object.SalesforceObject.Contact and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart Contacts Report Email test":
-            self.ContactsEmailMapping = emails_mapping_strategy.EmailContactsStrategy(input_csv).make_mapping()
-            self.ContactsEmailUpdateMapping = emails_mapping_strategy.EmailContactsUpdateStrategy(input_csv).make_mapping()
+            self.ContactsEmailMapping = emails_mapping_strategy.EmailStrategy(input_csv).make_mapping()
+            self.ContactsEmailUpdateMapping = emails_mapping_strategy.EmailUpdateStrategy(input_csv).make_mapping()
         elif entity_type == object.SalesforceObject.Contact and data_origin == origin_platform.OriginPlatform.Altru and report_name == "Veevart Contacts Relationships report test":
             self.ContactsRelationshipsMappingStrategy = relationships_mapping_strategy.ContactsRelationshipStrategy(input_csv).make_mapping()
         else: 

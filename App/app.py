@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
 from auth.auth_altru import auth_altru
 from auth.auth_salesforce import auth_salesforce
-from models.Events.event_report_data import ReportProcessor
+from util.event_report_data import ReportProcessor
 import os
 import glob
 from dotenv import load_dotenv

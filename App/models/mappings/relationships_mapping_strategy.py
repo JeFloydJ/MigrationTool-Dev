@@ -47,14 +47,20 @@ class OrganizationAffilationStrategy(MappingStrategy):
                     }
                     self.organizations_relationship_list.append(organizations_relationship_info)
 
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-        except KeyError as e:
-            print(f"Missing key in CSV file: {e}")
-        except IOError as e:
-            print(f"Error reading or writing file: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                for counter, row in enumerate(reader, start=1):
+                    contact_lookup_id = row['Lookup ID']
+                    organization_lookup_id = row['Relationships\\Related Constituent\\Lookup ID']
+                    organizations_relationship_info = {
+                        'npe5__Contact__r' : {'Auctifera__Implementation_External_ID__c': contact_lookup_id},
+                        'npe5__Organization__r' : {'Auctifera__Implementation_External_ID__c': organization_lookup_id},
+                        'npe5__Primary__c' : False if row['Relationships\\Is primary contact'] != 'Yes' else True,
+                        'npe5__Role__c' : row['Relationships\\Reciprocal relationship type'],
+                        'vnfp__Implementation_External_ID__c' : row['QUERYRECID']
+                    }
+                    self.organizations_relationship_list.append(organizations_relationship_info)
 
         return self.organizations_relationship_list
         
@@ -99,14 +105,18 @@ class ContactsRelationshipStrategy(MappingStrategy):
                     }
                     self.contacts_relationship_list.append(contacts_relationship_info)
 
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-        except KeyError as e:
-            print(f"Missing key in CSV file: {e}")
-        except IOError as e:
-            print(f"Error reading or writing file: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                for counter, row in enumerate(reader, start=1):
+                    lookup_id = row['Lookup ID']
+                    contacts_relationship_info = {
+                        'npe4__Contact__r': {'Auctifera__Implementation_External_ID__c': lookup_id},
+                        'npe4__RelatedContact__r': {'Auctifera__Implementation_External_ID__c': lookup_id},
+                        'npe4__Type__c' : row['Relationships\\Reciprocal relationship type'],
+                        'vnfp__Implementation_External_ID__c' : row['QUERYRECID']
+                    }
+                    self.contacts_relationship_list.append(contacts_relationship_info)
             
         return self.contacts_relationship_list
         

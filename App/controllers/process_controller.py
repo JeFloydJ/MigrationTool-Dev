@@ -1,16 +1,9 @@
 import os
 import sys
 from typing import List
-import logging
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from models.migration.accounts_and_contacts_migration_group import AccountsAndContactsMigrationGroup
 from models.factories.cleanup_strategy_factory import CleanupStrategyFactory
-
-
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
-                    force=True)
-logger = logging.getLogger(__name__)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,6 +12,7 @@ split_path = current_dir.split(os.sep)
 app_index = split_path.index("App")
 base_path = os.sep.join(split_path[:app_index + 1])
 ABS_PATH = os.path.join(base_path, "{}")
+
 
 # Paths to 'finish.txt' and 'error.txt'
 finish_path = ABS_PATH.format('data/finish.txt')
@@ -86,7 +80,6 @@ class ProcessController:
                 f.write('finish')
 
         except Exception as e:
-            logger.error(f"Error processing data: {e}")
             with open(error_path, 'w') as f:
                 f.write(str(e))
 

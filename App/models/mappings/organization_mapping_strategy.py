@@ -52,13 +52,20 @@ class OrganizationMappingStrategy(MappingStrategy):
 
                     self.account_list.append(account_info)
         
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-        except KeyError as e:
-            print(f"Missing key in CSV file: {e}")
-        except IOError as e:
-            print(f"Error reading or writing file: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")    
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                organization_id = self.salesforce_strategy.get_organization_id()
+                for row in reader:
+                    account_info = {
+                        'RecordTypeId': organization_id,
+                        'Auctifera__Implementation_External_ID__c': row['Lookup ID'],
+                        'Name': row["Name"],
+                        'Website': row['Web address'],
+                    }
+                    if row['Email Addresses\\Email address'] != '':
+                        account_info['Auctifera__Email__c'] = row['Email Addresses\\Email address']
+
+                    self.account_list.append(account_info)           
                    
         return self.account_list

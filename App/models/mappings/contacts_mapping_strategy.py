@@ -2,18 +2,10 @@ import csv
 import os
 import re
 import sys
-import logging
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from models.mappings.mapping_strategy import MappingStrategy
 from models.strategies.salesforce_strategy import SalesforceStrategy
 from typing import List, Dict
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
-    force=True
-)
-logger = logging.getLogger(__name__)
 
 class ContactsMappingStrategy(MappingStrategy):
     """
@@ -82,16 +74,23 @@ class ContactsMappingStrategy(MappingStrategy):
                         contacts_info['Account'] = {'Auctifera__Implementation_External_ID__c': dic[account]}
 
                     self.contacts_list.append(contacts_info)
-        
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-        except KeyError as e:
-            print(f"Missing key in CSV file: {e}")
-        except IOError as e:
-            print(f"Error reading or writing file: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-        
+ 
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                for row in reader:
+                    account = row.get('Households Belonging To\\Household Record ID', '')
+                    contacts_info = {
+                        'Salutation' : row['Title'],
+                        'FirstName' : row['First name'],
+                        'LastName' : row['Last/Organization/Group/Household name'],
+                        'Auctifera__Implementation_External_ID__c' : row['Lookup ID'],
+                    }
+                    if account and account in dic:
+                        contacts_info['Account'] = {'Auctifera__Implementation_External_ID__c': dic[account]}
+
+                    self.contacts_list.append(contacts_info)
+ 
         return self.contacts_list
     
     def process_contacts_ids(self, results) -> Dict[str, str]:

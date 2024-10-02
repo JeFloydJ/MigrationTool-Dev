@@ -1,7 +1,5 @@
-
 import csv
 import os
-from dotenv import load_dotenv
 
 #paths
 current_dir = os.path.dirname(os.path.abspath(__file__))

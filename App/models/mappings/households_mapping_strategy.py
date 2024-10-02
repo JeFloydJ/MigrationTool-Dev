@@ -37,21 +37,35 @@ class HouseholdsMappingStrategy(MappingStrategy):
         
         Returns:
             List[Dict]: A list of dictionaries representing the households mappings.
-        """ 
-        with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
-            reader = csv.DictReader(f, delimiter=';')
-            households_id = self.salesforce_strategy.get_households_id() 
-            counter = 0
-            for counter, row in enumerate(reader, start=1):
-                external_id = f"{counter}-households-{row['QUERYRECID']}"
-                self.houseHolds_external_ids_list.append(external_id)
-                households_info = {
-                    'RecordTypeId': households_id,
-                    'Auctifera__Implementation_External_ID__c': external_id,
-                    'Name': row["Name"]
-                }
-
-                self.households_list.append(households_info)
+        """
+        try:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=';')
+                households_id = self.salesforce_strategy.get_households_id() 
+                counter = 0
+                for counter, row in enumerate(reader, start=1):
+                    external_id = f"{counter}-households-{row['QUERYRECID']}"
+                    self.houseHolds_external_ids_list.append(external_id)
+                    households_info = {
+                        'RecordTypeId': households_id,
+                        'Auctifera__Implementation_External_ID__c': external_id,
+                        'Name': row["Name"]
+                    }
+                    self.households_list.append(households_info)
+        
+        except Exception:
+            with open(self.input_csv, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f, delimiter=',')
+                households_id = self.salesforce_strategy.get_households_id() 
+                counter = 0
+                for counter, row in enumerate(reader, start=1):
+                    external_id = f"{counter}-households-{row['QUERYRECID']}"
+                    self.houseHolds_external_ids_list.append(external_id)
+                    households_info = {
+                        'RecordTypeId': households_id,
+                        'Auctifera__Implementation_External_ID__c': external_id,
+                        'Name': row["Name"]
+                    }
+                    self.households_list.append(households_info)
 
         return self.households_list, self.houseHolds_external_ids_list
-        
